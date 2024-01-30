@@ -376,14 +376,6 @@ void initWiFi() {
 
 String getSensorReadings(){
 
-  pm1 = random(100, 500);
-  pm2_5 = random(50, 300);
-  pm10 = random(20, 150);
-  
-  temperature = random(30, 40);
-  air_quality = random(100, 500);
-  humidity = random(50, 90);
-
   readings["pm1"] = String(pm1);
   readings["pm2_5"] =  String(pm2_5);
   readings["pm10"] = String(pm10);

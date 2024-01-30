@@ -2,148 +2,20 @@
 <html>
 <head>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-  <title>Sensor Readings Dashboard</title>
-  <style>
-    canvas {
-      width: 100%;
-      max-width: 600px;
-      margin: auto; 
-      display: block;
-    }
-
-    h1 {
-      text-align: center;
-      color: #2ecc71;
-      margin-top: 30px;
-    }
-
-    body {
-     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-     background-color: #ecf0f1;
-    }
-
-   .back-button {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  padding: 10px;
-  background-color: #2ecc71;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-   }
-
-  </style>
+  <title>ROOM MONITORING - GRAPHS</title>
+  <link rel="stylesheet" type="text/css" href="graphs-styles.css">
 </head>
 <body>
-  <h1>Room Monitoring Dashboard</h1>
+  <h1>ROOM MONITORING DASHBOARD</h1>
   <button class="back-button" onclick="goBack()">Back</button>
-  <canvas id="temperatureChart" style="width:100%;max-width:600px"></canvas>
-  <canvas id="humidityChart" style="width:100%;max-width:600px"></canvas>
-  <canvas id="pm25Chart" style="width:100%;max-width:600px"></canvas>
-  <canvas id="pm1Chart" style="width:100%;max-width:600px"></canvas>
-  <canvas id="pm10Chart" style="width:100%;max-width:600px"></canvas>
-  <canvas id="ppmChart" style="width:100%;max-width:600px"></canvas>
-
-  <script>
-function updateChart(chart, newData) {
-  chart.data.labels.push('');
-  chart.data.datasets[0].data.push(newData);
-
-  if (chart.data.labels.length > 15) {
-    chart.data.labels.shift(); 
-    chart.data.datasets[0].data.shift(); 
-  }
-
-  var maxData = Math.max(...chart.data.datasets[0].data);
-  var minData = Math.min(...chart.data.datasets[0].data);
-  var dataRange = maxData - minData;
-  var tickPadding = dataRange * 0.01;
-
-  chart.options.scales.yAxes[0].ticks.min = Math.floor(minData - tickPadding);
-  chart.options.scales.yAxes[0].ticks.max = Math.ceil(maxData + tickPadding);
-
-  chart.update();
-}
-
-    function createChart(ctx, label, color) {
-      return new Chart(ctx, {
-        type: "line",
-        data: {
-          labels: [],
-          datasets: [{
-            fill: false,
-            lineTension: 0,
-            backgroundColor: color,
-            borderColor: color,
-            label: label,
-            data: []
-          }]
-        },
-        options: {
-          legend: { display: true },
-          scales: {
-            yAxes: [{
-              ticks: {
-                precision: 2,
-                callback: function(value, index, values) {
-                  return value.toFixed(2);
-                }
-              }
-            }]
-          }
-        }
-      });
-    }
-
-    var temperatureCtx = document.getElementById('temperatureChart').getContext('2d');
-    var temperatureChart = createChart(temperatureCtx, 'Temperature', "rgba(255, 99, 132, 1)");
-
-    var humidityCtx = document.getElementById('humidityChart').getContext('2d');
-    var humidityChart = createChart(humidityCtx, 'Humidity', "rgba(54, 162, 235, 1)");
-
-    var pm25Ctx = document.getElementById('pm25Chart').getContext('2d');
-    var pm25Chart = createChart(pm25Ctx, 'PM2.5', "rgba(75, 192, 192, 1)");
-
-    var pm1Ctx = document.getElementById('pm1Chart').getContext('2d');
-    var pm1Chart = createChart(pm1Ctx, 'PM1', "rgba(153, 102, 255, 1)");
-
-    var pm10Ctx = document.getElementById('pm10Chart').getContext('2d');
-    var pm10Chart = createChart(pm10Ctx, 'PM10', "rgba(255, 159, 64, 1)");
-
-    var ppmCtx = document.getElementById('ppmChart').getContext('2d');
-    var ppmChart = createChart(ppmCtx, 'PPM', "rgba(255, 159, 64, 1)");
-
-    function updateChartsWithData(myObj) {
-      updateChart(temperatureChart, myObj.temperature);
-      updateChart(humidityChart, myObj.humidity);
-      updateChart(pm25Chart, myObj.pm2_5);
-      updateChart(pm1Chart, myObj.pm1);
-      updateChart(pm10Chart, myObj.pm10);
-      updateChart(ppmChart, myObj.air_quality);
-    }
-
-    function getDataAndUpdateCharts() {
-      var xhr = new XMLHttpRequest();
-      xhr.onreadystatechange = function() {
-        if (this.readyState === 4 && this.status === 200) {
-          var myObj = JSON.parse(this.responseText);
-          updateChartsWithData(myObj);
-        }
-      };
-      xhr.open("GET", "/readings", true);
-      xhr.send();
-    }
-
-    setInterval(getDataAndUpdateCharts, 1000); // Update every 1 second
-    getDataAndUpdateCharts(); // Initial call to load data
-
-    function goBack() {
-  // Navigate to the charts page
-  window.location.href = 'index.html';
-}
-
-  </script>
+  <div class="charts-container">
+    <canvas id="temperatureChart"></canvas>
+    <canvas id="humidityChart"></canvas>
+    <canvas id="pm1Chart"></canvas>
+    <canvas id="pm25Chart"></canvas>
+    <canvas id="pm10Chart"></canvas>
+    <canvas id="ppmChart"></canvas>
+  </div>
+  <script src="graphs-script.js"></script>
 </body>
 </html>
